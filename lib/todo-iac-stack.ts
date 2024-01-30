@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import { AmazonLinuxImage, Instance, InstanceType, Peer, Port, SecurityGroup, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { AmazonLinuxImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
 export class TodoIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -14,16 +14,17 @@ export class TodoIacStack extends cdk.Stack {
     });
 
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(80));
+    securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22));
 
     const s3BucketName = this.node.tryGetContext('ExpressTodoAppS3BucketName');
 
     const userData = UserData.forLinux();
     userData.addCommands(
-      'yum update -y',
-      'yum install -y amazon-efs-utils',
-      'yum install -y wget',
+      'dnf update -y',
+      'dnf install -y amazon-efs-utils',
+      'dnf install -y wget',
       'wget https://s3.amazonaws.com/mountpoint-s3-release/latest/x86_64/mount-s3.rpm -O /tmp/mount-s3.rpm',
-      'yum localinstall -y /tmp/mount-s3.rpm',
+      'dnf localinstall -y /tmp/mount-s3.rpm',
       'rm /tmp/mount-s3.rpm',
       `mount-s3 ${s3BucketName} /mnt`,
       'ls /mnt/s3',
@@ -31,7 +32,6 @@ export class TodoIacStack extends cdk.Stack {
       'docker run -p 80:3001 -d todo-express:1.0.0',
     );
 
-    // Launch EC2 instance
     const instance = new InstanceType('t2.micro');
     const machineImage = new AmazonLinuxImage();
 
@@ -40,6 +40,7 @@ export class TodoIacStack extends cdk.Stack {
       machineImage,
       vpc,
       securityGroup,
+      vpcSubnets: { subnetType: SubnetType.PUBLIC },
     });
   }
 }
