@@ -1,9 +1,8 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { AmazonLinuxImage, CloudFormationInit, Instance, InstanceType, Peer, Port, SecurityGroup, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
-
+import * as cdk from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import { AmazonLinuxImage, Instance, InstanceType, Peer, Port, SecurityGroup, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
 export class TodoIacStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const vpc = new Vpc(this, 'ExpressTodoAppVpc', {
