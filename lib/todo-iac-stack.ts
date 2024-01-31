@@ -36,17 +36,17 @@ export class TodoIacStack extends cdk.Stack {
 
     const userData = UserData.forLinux();
     userData.addCommands(
-      'mkdir /var/log/startup',
-      'dnf update -y > /var/log/startup/dnf-update.log',
-      'dnf install -y amazon-efs-utils > /var/log/startup/install-amazon-efs-utils.log',
-      'sudo dnf install -y amazon-cloudwatch-agent > /var/log/startup/install-amazon-cloudwatch-agent.log',
-      'dnf install -y wget > /var/log/startup/install-wget.log',
+      'mkdir /tmp/startup',
+      'yum update -y > /tmp/startup/yum-update.log',
+      'yum install -y amazon-efs-utils > /tmp/startup/install-amazon-efs-utils.log',
+      'yum install -y amazon-cloudwatch-agent > /tmp/startup/install-amazon-cloudwatch-agent.log',
+      'yum install -y wget > /tmp/startup/install-wget.log',
       'wget https://s3.amazonaws.com/mountpoint-s3-release/latest/x86_64/mount-s3.rpm -O /tmp/mount-s3.rpm',
-      'dnf localinstall -y /tmp/mount-s3.rpm > /var/log/startup/install-mount-s3.log',
+      'yum localinstall -y /tmp/mount-s3.rpm > /tmp/startup/install-mount-s3.log',
       'rm /tmp/mount-s3.rpm',
-      `mount-s3 ${s3BucketName} /mnt > /var/log/startup/mount-s3.log`,
-      'docker load -i /mnt/todo-express-image-1_0_0.tar.gz  > /var/log/startup/docker-load.log',
-      'docker run -p 80:3001 -d todo-express:1.0.0 > /var/log/startup/docker-run.log',
+      `mount-s3 ${s3BucketName} /mnt > /tmp/startup/mount-s3.log`,
+      'docker load -i /mnt/todo-express-image-1_0_0.tar.gz  > /tmp/startup/docker-load.log',
+      'docker run -p 80:3001 -d todo-express:1.0.0 > /tmp/startup/docker-run.log',
     );
 
     const instance = new InstanceType('t2.micro');
