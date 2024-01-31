@@ -26,11 +26,12 @@ export class TodoIacStack extends cdk.Stack {
       'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash',
       '. ~/.nvm/nvm.sh',
       'nvm install --lts',
+      'npm install -g pm2',
       'export APP_PORT=80',
       'git clone https://github.com/mdbudnick/todo-express.git -b prod',
       'cd todo-express',
       'npm ci',
-      'npm start',
+      'pm2 start npm --name "todo-express" -- start',
     );
     const instance = new InstanceType('t2.micro');
     const keyPair = KeyPair.fromKeyPairName(this, 'EC2-KeyPair', 'ec2-todo')
