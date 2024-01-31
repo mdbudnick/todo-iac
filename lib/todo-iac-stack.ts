@@ -2,11 +2,16 @@ import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 <<<<<<< HEAD
 import { MachineImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+<<<<<<< HEAD
 =======
 import { MachineImage, Instance, InstanceType, KeyPair, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 >>>>>>> db93fb9 (keypair)
+=======
+import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+>>>>>>> 50740dc (Add permissions to instance for mount-s3)
 
 export class TodoIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -24,6 +29,19 @@ export class TodoIacStack extends cdk.Stack {
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22));
 
     const s3BucketName = this.node.tryGetContext('ExpressTodoAppS3BucketName');
+    const s3Bucket = Bucket.fromBucketName(this, 'ExistingS3Bucket', s3BucketName);
+
+    const role = new Role(this, 'S3AccessRole', {
+      assumedBy: new ServicePrincipal('ec2.amazonaws.com'), // Assuming this role by EC2 instances
+    });
+    role.addToPolicy(new PolicyStatement({
+      actions: ['s3:ListBucket'],
+      resources: [s3Bucket.bucketArn],
+    }));
+    role.addToPolicy(new PolicyStatement({
+      actions: ['s3:GetObject'],
+      resources: [`${s3Bucket.bucketArn}/*`],
+    }));
 
     const userData = UserData.forLinux();
     userData.addCommands(
@@ -50,6 +68,7 @@ export class TodoIacStack extends cdk.Stack {
       vpc,
       securityGroup,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      role,
       keyPair
     });
   }
