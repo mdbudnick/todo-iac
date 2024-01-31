@@ -1,6 +1,12 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
+<<<<<<< HEAD
 import { MachineImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+=======
+import { MachineImage, Instance, InstanceType, KeyPair, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+>>>>>>> db93fb9 (keypair)
 
 export class TodoIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -35,6 +41,7 @@ export class TodoIacStack extends cdk.Stack {
 
     const instance = new InstanceType('t2.micro');
     const machineImage = MachineImage.latestAmazonLinux2()
+    const keyPair = KeyPair.fromKeyPairName(this, 'EC2-KeyPair', 'ec2-todo')
 
     const ec2Instance = new Instance(this, 'ExpressTodoAppInstance', {
       instanceType: instance,
@@ -42,6 +49,7 @@ export class TodoIacStack extends cdk.Stack {
       vpc,
       securityGroup,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      keyPair
     });
   }
 }
