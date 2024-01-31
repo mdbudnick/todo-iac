@@ -1,17 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-<<<<<<< HEAD
-import { MachineImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
-<<<<<<< HEAD
-=======
 import { MachineImage, Instance, InstanceType, KeyPair, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
->>>>>>> db93fb9 (keypair)
-=======
-import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
->>>>>>> 50740dc (Add permissions to instance for mount-s3)
 
 export class TodoIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
