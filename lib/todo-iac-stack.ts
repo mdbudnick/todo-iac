@@ -28,8 +28,8 @@ export class TodoIacStack extends cdk.Stack {
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(80));
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22));
 
-    const s3BucketName = this.node.tryGetContext('ExpressTodoAppS3BucketName');
-    const s3Bucket = Bucket.fromBucketName(this, 'ExistingS3Bucket', s3BucketName);
+    const s3BucketName = process.env.TODO_BUCKET || this.node.tryGetContext('ExpressTodoAppS3BucketName');
+    const s3Bucket = Bucket.fromBucketArn(this, 'ExistingS3Bucket', `arn:aws:s3:::${s3BucketName}`);
 
     const role = new Role(this, 'S3AccessRole', {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'), // Assuming this role by EC2 instances
