@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import { AmazonLinuxImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+import { MachineImage, Instance, InstanceType, Peer, Port, SecurityGroup, SubnetType, UserData, Vpc } from 'aws-cdk-lib/aws-ec2';
+
 export class TodoIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -33,7 +34,7 @@ export class TodoIacStack extends cdk.Stack {
     );
 
     const instance = new InstanceType('t2.micro');
-    const machineImage = new AmazonLinuxImage();
+    const machineImage = MachineImage.latestAmazonLinux2()
 
     const ec2Instance = new Instance(this, 'ExpressTodoAppInstance', {
       instanceType: instance,
