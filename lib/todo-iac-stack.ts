@@ -26,6 +26,7 @@ export class TodoIacStack extends cdk.Stack {
       'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash',
       '. ~/.nvm/nvm.sh',
       'nvm install --lts',
+      'setcap \'cap_net_bind_service=+ep\' $(which node)',
       'npm install -g pm2',
       'export APP_PORT=80',
       'git clone https://github.com/mdbudnick/todo-express.git -b prod',
