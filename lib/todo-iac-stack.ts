@@ -31,6 +31,8 @@ export class TodoIacStack extends cdk.Stack {
       'export APP_PORT=80',
       'git clone https://github.com/mdbudnick/todo-express.git -b prod',
       'cd todo-express',
+      'openssl genrsa -out privatekey.pem',
+      'openssl req -new -x509 -key privatekey.pem -out server.crt -days 365 -subj "/C=US/ST=NY/L=NYC/O=Waves Workshop/CN=ec2-todo/emailAddress=michaeldbudnick@gmail.com"',
       'npm ci',
       'pm2 start npm --name "todo-express" -- start',
     );
